@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+      "jsx": "react",
+      "target": "ES2015",
+      "module": "commonjs",
+      "sourceMap": true,
+      "esModuleInterop": true
+  }
+}
