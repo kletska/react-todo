@@ -1,7 +1,5 @@
 import React from 'react'
-.px1 {
 
-}
 type TodoListProps ={
     todos: any[]
 }
