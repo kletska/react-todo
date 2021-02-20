@@ -29896,8 +29896,63 @@ var TodoForm = function TodoForm(_ref) {
 };
 
 exports.TodoForm = TodoForm;
+},{"react":"../node_modules/react/index.js"}],"TodoList.tsx":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TodoList = void 0;
+
+var react_1 = __importDefault(require("react"));
+
+var TodoList = function TodoList(_ref) {
+  var todos = _ref.todos,
+      onToggle = _ref.onToggle,
+      onRemove = _ref.onRemove;
+
+  if (todos.length === 0) {
+    return react_1.default.createElement("p", {
+      className: "center"
+    }, "Get your own business!");
+  }
+
+  return react_1.default.createElement("ul", null, todos.map(function (todo) {
+    return react_1.default.createElement("li", {
+      className: "",
+      key: todo.id
+    }, react_1.default.createElement("label", null, react_1.default.createElement("input", {
+      type: "checkbox",
+      checked: todo.completed,
+      onChange: function onChange() {
+        return onToggle(todo.id);
+      }
+    }), react_1.default.createElement("span", null, todo.title), react_1.default.createElement("i", {
+      className: "material-icons red-text",
+      onClick: function onClick() {
+        return onRemove(todo.id);
+      }
+    }, "delete")));
+  }));
+};
+
+exports.TodoList = TodoList;
 },{"react":"../node_modules/react/index.js"}],"App.tsx":[function(require,module,exports) {
 "use strict";
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -29955,15 +30010,50 @@ var Navbar_1 = require("./Navbar");
 
 var TodoForm_1 = require("./TodoForm");
 
+var TodoList_1 = require("./TodoList");
+
 var App = function App() {
   var _react_1$useState = react_1.useState([]),
       _react_1$useState2 = _slicedToArray(_react_1$useState, 2),
       todos = _react_1$useState2[0],
       setTodos = _react_1$useState2[1];
 
+  react_1.useEffect(function () {
+    var saved = JSON.parse(localStorage.getItem('todos') || '[]');
+    setTodos(saved);
+  }, []);
+  react_1.useEffect(function () {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
+
   var addHandler = function addHandler(title) {
+    var newTodo = {
+      title: title,
+      id: Date.now(),
+      completed: false
+    };
     setTodos(function (prev) {
-      return prev.concat([title]);
+      return [newTodo].concat(_toConsumableArray(prev));
+    });
+  };
+
+  var toggleHandler = function toggleHandler(id) {
+    setTodos(function (prev) {
+      return prev.map(function (item) {
+        if (item.id === id) {
+          item.completed = !item.completed;
+        }
+
+        return item;
+      });
+    });
+  };
+
+  var removeHandler = function removeHandler(id) {
+    setTodos(function (prev) {
+      return prev.filter(function (item) {
+        return item.id !== id;
+      });
     });
   };
 
@@ -29971,11 +30061,15 @@ var App = function App() {
     className: "container"
   }, react_1.default.createElement(TodoForm_1.TodoForm, {
     onAdd: addHandler
+  }), react_1.default.createElement(TodoList_1.TodoList, {
+    todos: todos,
+    onToggle: toggleHandler,
+    onRemove: removeHandler
   })));
 };
 
 exports.default = App;
-},{"react":"../node_modules/react/index.js","./Navbar":"Navbar.tsx","./TodoForm":"TodoForm.tsx"}],"index.tsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./Navbar":"Navbar.tsx","./TodoForm":"TodoForm.tsx","./TodoList":"TodoList.tsx"}],"index.tsx":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -30023,7 +30117,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41141" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43947" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
